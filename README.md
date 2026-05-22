@@ -1,5 +1,7 @@
 # RFM Customer Segmentation
 
+> 🌐 **Live walkthrough:** https://ucazin.github.io/rfm-customer-segmentation/
+
 Classical customer segmentation on the [UCI Online Retail II](https://archive.ics.uci.edu/dataset/502/online+retail+ii) dataset — **805,549 transactions** from a UK-based online retailer between **December 2009 and December 2011**, totalling **£17.7M in revenue** across **5,878 customers**.
 
 We compute **RFM scores** (Recency / Frequency / Monetary), tag every customer with a marketable segment (Champions, Loyal, At Risk, Hibernating, Lost, …), and write a **playbook** that ties each segment to a specific marketing action with cost and projected revenue.
