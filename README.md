@@ -1,5 +1,22 @@
 # RFM Customer Segmentation
 
+
+## Architecture
+
+```mermaid
+flowchart LR
+    UCI["UCI Online Retail II<br/>(805,549 transactions)"] --> LOAD["src/load_data.py<br/>download · clean · type-cast"]
+    LOAD --> TX["data/transactions.parquet"]
+    TX --> RFM["src/rfm.py<br/>quintile R/F/M<br/>+ 11 canonical segments<br/>(Klaviyo/Putler canon)"]
+    RFM --> RFMP["data/rfm.parquet"]
+    RFMP --> SEG["src/segment.py<br/>k-means + silhouette<br/>+ chart rendering"]
+    RFMP --> PB["src/playbook.py<br/>per-segment action plan<br/>+ ROI projection"]
+    SEG --> CHARTS["outputs/01-04 PNGs"]
+    PB --> PBOUT["outputs/PLAYBOOK.md"]
+    RFMP --> AUDIT["src/extract_key_numbers.py"]
+    TX -.->|SQL parity| SQL["sql/rfm.sql (DuckDB)"]
+```
+
 > 🌐 **Live walkthrough:** https://ucazin.github.io/rfm-customer-segmentation/
 
 Classical customer segmentation on the [UCI Online Retail II](https://archive.ics.uci.edu/dataset/502/online+retail+ii) dataset — **805,549 transactions** from a UK-based online retailer between **December 2009 and December 2011**, totalling **£17.7M in revenue** across **5,878 customers**.
