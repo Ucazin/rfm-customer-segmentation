@@ -1,108 +1,250 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>RFM Customer Segmentation · Lucca Cesar</title>
-<meta name="description" content="49.5% of revenue rides on 609 customers. The RFM analysis that turns the next promotional dollar into a decision, not a guess." />
+<title>RFM Segmentation · 49.5% on 609 customers · Lucca Cesar</title>
+<meta name="description" content="UCI Online Retail II — 805,549 transactions, 5,878 customers, £17.7M of revenue. RFM scoring + k-means + a quarterly marketing playbook projecting 10.5× ROI." />
+<meta name="theme-color" content="#0a0a0f" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif'],display:['"Space Grotesk"','system-ui','sans-serif'],mono:['"JetBrains Mono"','"SF Mono"','monospace']}}}};</script>
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <style>
-  :root { --bg:#fff7f7; --ink:#1a1a1a; --muted:#5b5b5b; --accent:#e11d48; --accent-soft:#ffe4e8; --line:#f0d6da; }
-  *,*::before,*::after{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  body{background:var(--bg);color:var(--ink);font-family:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.6}
-  .wrap{max-width:760px;margin:0 auto;padding:48px 24px 96px}
-  .eyebrow{display:inline-block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600;margin-bottom:18px}
-  h1{font-family:"Iowan Old Style","Georgia",serif;font-weight:700;font-size:clamp(36px,6vw,56px);line-height:1.08;letter-spacing:-.02em;margin:0 0 24px}
-  h2{font-family:"Iowan Old Style","Georgia",serif;font-weight:700;font-size:clamp(24px,3.4vw,32px);line-height:1.2;margin:56px 0 16px;letter-spacing:-.01em}
-  p{font-size:17px;color:#262626;margin:0 0 16px}
-  .lede{font-size:20px;color:var(--muted);margin-bottom:36px}
-  .badges{display:flex;flex-wrap:wrap;gap:8px;margin:24px 0 0}
-  .badge{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);padding:6px 12px;border-radius:999px;font-size:13px;color:#333}
-  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:36px 0 12px}
-  .stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px}
-  .stat .num{font-family:"Iowan Old Style","Georgia",serif;font-size:34px;font-weight:700;letter-spacing:-.02em;color:var(--ink);display:block}
-  .stat .label{font-size:13px;color:var(--muted);margin-top:4px;display:block}
-  .callout{background:var(--accent-soft);border-left:4px solid var(--accent);padding:18px 22px;border-radius:8px;margin:24px 0;font-size:17px}
-  ul.tight{padding-left:1.2em;margin:0 0 16px}
-  ul.tight li{margin-bottom:6px;font-size:17px}
-  a.link{color:var(--accent);text-decoration:underline;text-underline-offset:3px;font-weight:600}
-  .cta{background:var(--ink);color:#fff;border-radius:16px;padding:32px 28px;margin-top:48px;display:flex;flex-direction:column;gap:14px}
-  .cta h2{color:#fff;margin:0;font-size:24px}
-  .cta p{color:#cfcfcf;margin:0}
-  .cta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
-  .btn{display:inline-block;background:#fff;color:var(--ink);padding:11px 18px;border-radius:999px;text-decoration:none;font-weight:600;font-size:14px;border:1px solid #fff}
-  .btn.ghost{background:transparent;color:#fff;border-color:#444}
-  .footer{margin-top:64px;color:var(--muted);font-size:13px;text-align:center}
-  @media (max-width: 540px){ .wrap{padding:32px 20px 80px} h1{font-size:34px} .lede{font-size:18px} }
+  :root { --accent: #e11d48; --accent-soft: rgba(225,29,72,0.12); --accent-2: #a855f7; }
+  html, body { background: #0a0a0f; color: #e4e4e7; }
+  body { font-feature-settings: "ss01","cv11"; }
+  .grid-bg { background-image: linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px); background-size: 56px 56px; }
+  .orb { position: absolute; border-radius: 9999px; filter: blur(80px); pointer-events: none; }
+  .glass { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); transition: all 200ms ease-out; }
+  .glass:hover { border-color: rgba(255,255,255,0.16); transform: translateY(-2px); }
+  .pill { display:inline-flex; align-items:center; gap:6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.10); color:#e4e4e7; padding:6px 12px; border-radius:9999px; font-size:12.5px; font-family:"JetBrains Mono",monospace; font-weight:500; }
+  .pill:hover { background: rgba(255,255,255,0.08); }
+  .accent-pill { background: var(--accent-soft); border-color: rgba(225,29,72,0.30); color: #fda4af; }
+  .fade-up { opacity:0; transform: translateY(20px); transition: opacity 800ms cubic-bezier(.16,1,.3,1), transform 800ms cubic-bezier(.16,1,.3,1); }
+  .fade-up.in { opacity:1; transform: translateY(0); }
+  .progress-bar { position:fixed; top:0; left:0; height:2px; background: linear-gradient(90deg, var(--accent-2), var(--accent)); z-index:50; transition: width 60ms linear; box-shadow: 0 0 10px var(--accent); }
+  .count-up { font-variant-numeric: tabular-nums; }
+  .num-glow { background: linear-gradient(135deg, #a855f7, #e11d48); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 30px rgba(225,29,72,0.4)); }
+  .sec-eyebrow { display:inline-block; padding:4px 10px; border-radius:6px; background: rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); font-family:"JetBrains Mono",monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:#a1a1aa; margin-bottom:16px; }
+  .check { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; width:22px; height:22px; border-radius:9999px; background: var(--accent-soft); border:1px solid rgba(225,29,72,0.4); margin-right:14px; margin-top:2px; }
+  .check svg { width:12px; height:12px; color:#fda4af; }
+  ::selection { background: var(--accent); color: #0a0a0f; }
+  * { -webkit-tap-highlight-color: transparent; }
+  /* Segment grid */
+  .seg-card { border-radius: 14px; padding: 16px; transition: all 220ms ease-out; }
+  .seg-card:hover { transform: translateY(-2px); }
+  .seg-champion { background: linear-gradient(135deg, rgba(168,85,247,0.20), rgba(225,29,72,0.30)); border: 1px solid rgba(225,29,72,0.40); box-shadow: 0 0 32px rgba(225,29,72,0.20); }
+  .seg-warm { background: rgba(225,29,72,0.08); border: 1px solid rgba(225,29,72,0.20); }
+  .seg-cold { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
+  .seg-num { font-family:"JetBrains Mono",monospace; font-weight:700; font-size: 28px; }
+  .seg-name { font-family:"Space Grotesk",sans-serif; font-weight:600; font-size: 15px; color:#e4e4e7; }
+  .seg-sub { font-family:"JetBrains Mono",monospace; font-size:11px; color:#a1a1aa; margin-top: 4px; }
+  @media (max-width: 768px) { .orb { opacity: 0.2 !important; } }
 </style>
 </head>
-<body>
-  <main class="wrap">
-    <span class="eyebrow">Project 06 · Marketing analytics · Customer segmentation</span>
-    <h1>49.5% of revenue rides on 609 customers. Now what?</h1>
-    <p class="lede">Two years of e-commerce data from a UK online retailer — 805,549 transactions, 5,878 customers, £17.7M of revenue. I segmented them, priced the next quarter's promotional plan, and projected a 10.5× ROI.</p>
+<body class="font-sans antialiased min-h-screen overflow-x-hidden">
+  <div class="progress-bar" id="pb" style="width:0%"></div>
 
-    <div class="stats">
-      <div class="stat"><span class="num">£17.7 M</span><span class="label">revenue across 5,878 customers</span></div>
-      <div class="stat"><span class="num">52%</span><span class="label">of revenue from the top 5% of customers</span></div>
-      <div class="stat"><span class="num">£943 k</span><span class="label">at-risk revenue (At Risk + Can't Lose Them)</span></div>
-      <div class="stat"><span class="num">10.5×</span><span class="label">blended ROI on the quarterly playbook</span></div>
-    </div>
-
-    <h2>The story</h2>
-    <p>The revenue is extraordinarily top-heavy. <strong>Champions</strong> — 609 customers averaging 8 days since their last order — account for £8.8M, or 49.5% of the book. Add Loyal and you're at 66% from 11% of the customers. Below that line, every additional segment matters less than keeping one Champion happy.</p>
-    <p>This is not a "long tail" story. It is "the long tail is the floor; the head is the building."</p>
-
-    <h2>Where the at-risk dollars actually live</h2>
-    <ul class="tight">
-      <li><strong>At Risk</strong> (177 customers, £845k) — used to be Loyal, just stopped buying. Recency between 60 and 290 days.</li>
-      <li><strong>Can't Lose Them</strong> (11 customers, £98k) — used to be Champions. Now silent. Highest unit value in the book.</li>
-      <li>Combined: <strong>188 customers, £943k of historical revenue, not currently buying.</strong></li>
-    </ul>
-
-    <div class="callout">
-      <strong>Why not Lost?</strong> Lost is bigger on paper (1,892 customers, £3M of historical revenue), but Lost is by definition outside the window where a re-engagement campaign converts above cost. At Risk + Can't Lose Them are the people who <em>were</em> buying and <em>just stopped</em> — the right moment to intervene.
-    </div>
-
-    <h2>What the playbook recommends</h2>
-    <ul class="tight">
-      <li><strong>VIP — Champions, Can't Lose Them.</strong> $6-22 per customer. High-touch human outreach. ROI of the Champions program alone: 23.8×.</li>
-      <li><strong>Retain — Loyal, Potential Loyalist, At Risk.</strong> $2.50-18 per customer. Mid-touch cross-sell or targeted win-back.</li>
-      <li><strong>Reactivate — Hibernating, About to Sleep, Need Attention.</strong> $0.80-5 per customer. Low-cost email. If it doesn't work, walk away.</li>
-      <li><strong>Don't spend — Lost, Promising.</strong> A coupon to someone who hasn't ordered in a year is theatre.</li>
-    </ul>
-    <p>Total quarterly cost: <strong>$13.7k</strong>. Projected retained / new revenue: <strong>$144.7k</strong>. Blended ROI: <strong>10.5×</strong>.</p>
-
-    <h2>What I'm honest about</h2>
-    <ul class="tight">
-      <li>Conversion rates are <em>quoted from industry benchmarks</em> (Klaviyo, Mailchimp, Optimove), not measured from your data. Re-run after one quarter of A/B and update.</li>
-      <li>RFM is a snapshot, not a trend. Production deployment re-runs this monthly.</li>
-      <li>The k-means alternative produced the same Champions cluster as the rule-based segmentation. That's the right outcome — it means the rule-based labels (which marketing can <em>read</em>) are not arbitrary.</li>
-    </ul>
-
-    <h2>The tech</h2>
-    <div class="badges">
-      <span class="badge">Python</span>
-      <span class="badge">pandas</span>
-      <span class="badge">scikit-learn</span>
-      <span class="badge">k-means + silhouette</span>
-      <span class="badge">DuckDB</span>
-      <span class="badge">SQL parity</span>
-      <span class="badge">matplotlib + seaborn</span>
-    </div>
-
-    <section class="cta">
-      <h2>Want the playbook?</h2>
-      <p>Repo includes the full pipeline, the SQL version of the scoring, four charts, the per-segment marketing memo, and the one-page business framing.</p>
-      <div class="cta-row">
-        <a class="btn" href="https://github.com/Ucazin/rfm-customer-segmentation">View on GitHub</a>
-        <a class="btn ghost" href="https://www.linkedin.com/in/luccamariz/">Connect on LinkedIn</a>
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 grid-bg opacity-50"></div>
+    <div class="orb" style="background:#a855f7; top:-260px; left:-160px; width:600px; height:600px; opacity:0.30;"></div>
+    <div class="orb" style="background:#e11d48; bottom:-200px; right:-200px; width:500px; height:500px; opacity:0.30;"></div>
+    <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+    <div class="relative max-w-6xl mx-auto px-6 md:px-10 pt-10 md:pt-14">
+      <nav class="flex items-center justify-between mb-16 md:mb-24">
+        <a href="https://github.com/Ucazin" class="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.74.08-.73.08-.73 1.21.09 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.49.99.11-.78.42-1.3.76-1.6-2.66-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.31-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23A11.5 11.5 0 0 1 12 5.8c1.02.01 2.05.14 3.01.4 2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.25 2.87.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.49 5.92.43.37.82 1.1.82 2.22v3.29c0 .32.21.69.83.58A12 12 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>github.com/Ucazin</a>
+        <div class="hidden md:flex items-center gap-2 text-xs text-zinc-500 font-mono uppercase tracking-wider"><span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>Live walkthrough · Project 06</div>
+      </nav>
+      <div class="max-w-5xl">
+        <span class="pill accent-pill mb-8">RFM · 11 segments · k-means · marketing playbook · 10.5× ROI</span>
+        <h1 class="font-display text-[42px] md:text-[68px] lg:text-[84px] font-bold leading-[1.02] tracking-[-0.025em]">
+          <span class="num-glow">49.5% of revenue</span><br/>
+          rides on 609 customers.<br/>
+          <span class="text-zinc-400 text-[36px] md:text-[56px] lg:text-[68px]">Now what?</span>
+        </h1>
+        <p class="mt-8 text-lg md:text-xl text-zinc-400 max-w-2xl leading-relaxed">
+          Two years of UK e-commerce — 805,549 transactions, £17.7M of revenue (UCI Online Retail II). I scored every customer on Recency, Frequency, Monetary and priced the next quarter's marketing.
+        </p>
+        <div class="mt-16 grid grid-cols-1 md:grid-cols-[auto_1fr] gap-12 items-end">
+          <div x-data="{shown:false, n:0, target:49.5}" x-intersect.once="shown=true;
+            (function(){const start=performance.now();const dur=1400;const step=(t)=>{const p=Math.min(1,(t-start)/dur);const eased=1-Math.pow(1-p,4);n=target*eased;if(p<1)requestAnimationFrame(step);else n=target;};requestAnimationFrame(step);})()">
+            <div class="font-mono text-7xl md:text-9xl font-bold count-up tracking-tight num-glow" x-text="n.toFixed(1) + '%'"></div>
+            <div class="mt-3 text-xs md:text-sm font-mono text-zinc-500 uppercase tracking-[0.18em] leading-relaxed max-w-xs">of revenue from <span class="text-zinc-300">609 Champions</span><br/>average recency: 8 days</div>
+          </div>
+          <div class="hidden md:flex justify-end">
+            <div class="text-right">
+              <div class="font-mono text-xs text-zinc-500 uppercase tracking-wider mb-1">Customers</div>
+              <div class="font-mono text-sm text-zinc-300">5,878 · UK online retailer</div>
+              <div class="font-mono text-xs text-zinc-500 mt-3 mb-1 uppercase tracking-wider">Window</div>
+              <div class="font-mono text-sm text-zinc-300">Dec 2009 – Dec 2011</div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-16 mb-20 flex flex-wrap gap-3">
+          <a href="https://github.com/Ucazin/rfm-customer-segmentation" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white text-zinc-900 font-medium text-sm hover:bg-zinc-200 transition">View on GitHub <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+          <a href="https://github.com/Ucazin/rfm-customer-segmentation/blob/main/outputs/PLAYBOOK.md" class="inline-flex items-center gap-2 px-6 py-3.5 rounded-full border border-white/15 text-zinc-300 hover:bg-white/5 hover:border-white/25 transition font-medium text-sm">Read the marketing playbook</a>
+        </div>
       </div>
-    </section>
-
-    <div class="footer">
-      Built by <a class="link" href="https://github.com/Ucazin">Lucca Cesar</a> · Data Analyst · open to remote US/CA roles
     </div>
-  </main>
+  </section>
+
+  <section class="relative max-w-6xl mx-auto px-6 md:px-10 py-20 fade-up" data-fade>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      <div class="glass rounded-2xl p-6"><div class="text-zinc-500 text-xs font-mono uppercase tracking-wider mb-3">Revenue</div><div class="font-mono text-3xl md:text-4xl font-bold text-white">£17.7 M</div><div class="text-zinc-400 text-sm mt-2">across 5,878 customers</div></div>
+      <div class="glass rounded-2xl p-6"><div class="text-zinc-500 text-xs font-mono uppercase tracking-wider mb-3">Top 5%</div><div class="font-mono text-3xl md:text-4xl font-bold num-glow">52%</div><div class="text-zinc-400 text-sm mt-2">of total revenue</div></div>
+      <div class="glass rounded-2xl p-6"><div class="text-zinc-500 text-xs font-mono uppercase tracking-wider mb-3">At Risk</div><div class="font-mono text-3xl md:text-4xl font-bold text-white">£943 k</div><div class="text-zinc-400 text-sm mt-2">historical, not buying</div></div>
+      <div class="glass rounded-2xl p-6"><div class="text-zinc-500 text-xs font-mono uppercase tracking-wider mb-3">Blended ROI</div><div class="font-mono text-3xl md:text-4xl font-bold num-glow">10.5×</div><div class="text-zinc-400 text-sm mt-2">on the playbook</div></div>
+    </div>
+  </section>
+
+  <section class="relative max-w-3xl mx-auto px-6 md:px-10 py-16 fade-up" data-fade>
+    <span class="sec-eyebrow">The shape of the book</span>
+    <h2 class="font-display text-3xl md:text-5xl font-bold tracking-tight mb-8 leading-[1.1]">
+      This is not a long-tail story.<br/>
+      <span class="num-glow">It's "the long tail is the floor; the head is the building."</span>
+    </h2>
+    <div class="space-y-6 text-zinc-300 leading-relaxed text-lg">
+      <p>Top 5% of customers = <span class="font-mono text-white">52%</span> of revenue. Add the next 6% and you're at <span class="font-mono text-white">66%</span>. Add the next 9% and you're at <span class="font-mono text-white">77%</span>. Champions alone — 609 customers averaging 8 days since their last order — account for <span class="font-mono text-white">£8.8M</span>, or <span class="num-glow font-medium">49.5%</span> of the book.</p>
+      <p>Below the top 11%, every additional segment matters less than the marginal cost of keeping one Champion happy. The playbook prices their attention the highest.</p>
+      <p>And the at-risk pile? <span class="font-mono text-white">188 customers</span> in <em class="text-white not-italic">At Risk</em> + <em class="text-white not-italic">Can't Lose Them</em>. People who <em class="text-white not-italic">were</em> buying and <em class="text-white not-italic">just stopped</em>. <span class="font-mono text-white">£943k</span> of historical revenue, the right moment to intervene.</p>
+    </div>
+  </section>
+
+  <!-- SEGMENT GRID -->
+  <section class="relative max-w-6xl mx-auto px-6 md:px-10 py-16 fade-up" data-fade>
+    <span class="sec-eyebrow">The 11 segments</span>
+    <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight mb-3">Each cell sized by revenue. Champions glow.</h2>
+    <p class="text-zinc-400 mb-10 max-w-2xl">Rule-based segmentation matching the Klaviyo / Mailchimp / Putler canon. k-means confirms the same Champions cluster — meaning the labels aren't arbitrary.</p>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div class="seg-card seg-champion md:col-span-2 md:row-span-2 flex flex-col justify-end" style="min-height: 220px;">
+        <div class="seg-name" style="font-size: 22px;">Champions</div>
+        <div class="seg-sub">609 customers · recency 8d</div>
+        <div class="seg-num num-glow mt-3">£8.78 M · 49.5%</div>
+      </div>
+      <div class="seg-card seg-warm">
+        <div class="seg-name">Loyal</div>
+        <div class="seg-sub">715 · recency 30d</div>
+        <div class="seg-num" style="color: #fda4af;">£3.47M · 19.5%</div>
+      </div>
+      <div class="seg-card seg-warm">
+        <div class="seg-name">Lost</div>
+        <div class="seg-sub">1,892 · recency 225d</div>
+        <div class="seg-num" style="color: #d4d4d8;">£2.98M · 16.8%</div>
+      </div>
+      <div class="seg-card seg-warm">
+        <div class="seg-name">At Risk</div>
+        <div class="seg-sub">177 · recency 289d</div>
+        <div class="seg-num" style="color: #fda4af;">£845k · 4.8%</div>
+      </div>
+      <div class="seg-card seg-warm">
+        <div class="seg-name">Hibernating</div>
+        <div class="seg-sub">1,424 · recency 430d</div>
+        <div class="seg-num" style="color: #d4d4d8;">£783k · 4.4%</div>
+      </div>
+      <div class="seg-card seg-cold">
+        <div class="seg-name">Potential Loyalist</div>
+        <div class="seg-sub">356 · recency 10d</div>
+        <div class="seg-num text-zinc-300">£486k · 2.7%</div>
+      </div>
+      <div class="seg-card seg-cold">
+        <div class="seg-name">Need Attention</div>
+        <div class="seg-sub">157 · recency 108d</div>
+        <div class="seg-num text-zinc-300">£155k · 0.9%</div>
+      </div>
+      <div class="seg-card seg-cold">
+        <div class="seg-name">Can't Lose Them</div>
+        <div class="seg-sub">11 · recency 470d</div>
+        <div class="seg-num" style="color: #fda4af;">£98k · 0.6%</div>
+      </div>
+      <div class="seg-card seg-cold">
+        <div class="seg-name">About to Sleep</div>
+        <div class="seg-sub">317 · recency 110d</div>
+        <div class="seg-num text-zinc-300">£102k · 0.6%</div>
+      </div>
+      <div class="seg-card seg-cold">
+        <div class="seg-name">Promising</div>
+        <div class="seg-sub">143 · recency 38d</div>
+        <div class="seg-num text-zinc-300">£32k · 0.2%</div>
+      </div>
+      <div class="seg-card seg-cold">
+        <div class="seg-name">New Customers</div>
+        <div class="seg-sub">77 · recency 11d</div>
+        <div class="seg-num text-zinc-300">£19k · 0.1%</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAYBOOK CALLOUT -->
+  <section class="relative max-w-6xl mx-auto px-6 md:px-10 py-16 fade-up" data-fade>
+    <div class="relative glass rounded-3xl p-8 md:p-14 overflow-hidden">
+      <div class="orb" style="background: #e11d48; top:-100px; right:-100px; width:380px; height:380px; opacity:0.20;"></div>
+      <div class="orb" style="background: #a855f7; bottom:-80px; left:-80px; width:300px; height:300px; opacity:0.18;"></div>
+      <div class="relative grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div>
+          <span class="sec-eyebrow" style="color:#fda4af; border-color: rgba(225,29,72,0.3); background: rgba(225,29,72,0.08);">The math</span>
+          <div class="font-display text-4xl md:text-5xl font-bold leading-[1.1] mt-2 text-white">$13.7k cost.</div>
+          <div class="font-display text-4xl md:text-5xl font-bold leading-[1.1] num-glow">$144.7k projected.</div>
+          <div class="font-display text-4xl md:text-5xl font-bold leading-[1.1] text-white mt-3">10.5× blended.</div>
+        </div>
+        <div class="space-y-3 text-zinc-300 leading-relaxed">
+          <p><span class="text-white font-medium">VIP</span> · Champions, Can't Lose Them · $6-22/customer · ROI 23.8× on Champions alone.</p>
+          <p><span class="text-white font-medium">Retain</span> · Loyal, Potential Loyalist, At Risk · $2.50-18/customer.</p>
+          <p><span class="text-white font-medium">Reactivate</span> · Hibernating, About to Sleep · $0.80-5/customer.</p>
+          <p><span class="text-zinc-500 font-medium">Don't spend</span> · Lost, Promising. A coupon to a 1-year-stale customer is theatre.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT I BUILT -->
+  <section class="relative max-w-3xl mx-auto px-6 md:px-10 py-16 fade-up" data-fade>
+    <span class="sec-eyebrow">Under the hood</span>
+    <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight mb-8">What's inside the repo.</h2>
+    <ul class="space-y-5 text-zinc-300">
+      <li class="flex items-start"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span><div><span class="text-white font-medium">RFM quintile scoring</span> on Recency / Frequency / Monetary → triplet (e.g. 555 = best).</div></li>
+      <li class="flex items-start"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span><div><span class="text-white font-medium">11 rule-based segments</span> matching Klaviyo / Mailchimp / Putler canon.</div></li>
+      <li class="flex items-start"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span><div><span class="text-white font-medium">k-means alternative</span> with silhouette analysis. Same Champions cluster emerges from both methods.</div></li>
+      <li class="flex items-start"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span><div><span class="text-white font-medium">SQL parity version</span> in <code class="font-mono text-xs px-1 bg-white/5 rounded">sql/rfm.sql</code> for the SQL-first reviewer.</div></li>
+      <li class="flex items-start"><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg></span><div><span class="text-white font-medium">Per-segment playbook</span> with industry-benchmark conversion rates, cost, projected revenue, ROI per segment.</div></li>
+    </ul>
+  </section>
+
+  <section class="relative max-w-6xl mx-auto px-6 md:px-10 py-16 fade-up" data-fade>
+    <span class="sec-eyebrow">The stack</span>
+    <h2 class="font-display text-3xl md:text-4xl font-bold tracking-tight mb-8">Built with.</h2>
+    <div class="flex flex-wrap gap-2.5">
+      <span class="pill">Python 3.12</span><span class="pill">pandas</span><span class="pill">scikit-learn</span><span class="pill">k-means + silhouette</span><span class="pill">DuckDB</span><span class="pill">SQL parity</span><span class="pill">matplotlib + seaborn</span>
+    </div>
+  </section>
+
+  <footer class="relative border-t border-white/5 mt-12 overflow-hidden">
+    <div class="orb" style="background:#e11d48; bottom:-180px; left:50%; transform:translateX(-50%); width:600px; height:280px; opacity:0.10;"></div>
+    <div class="orb" style="background:#a855f7; bottom:-100px; left:30%; width:300px; height:180px; opacity:0.10;"></div>
+    <div class="relative max-w-6xl mx-auto px-6 md:px-10 py-20">
+      <span class="sec-eyebrow">Hire</span>
+      <h2 class="font-display text-3xl md:text-5xl font-bold tracking-tight mb-3 max-w-3xl leading-[1.1]">Open to remote <span class="num-glow">Data Analyst</span> roles in the US &amp; Canada.</h2>
+      <p class="text-zinc-400 max-w-2xl mb-10 text-lg">Six more projects in the same portfolio: Olist Kimball SQL · SaaS MRR/churn · A/B testing with CUPED · dbt warehouse · NYC 311 dashboard · BigQuery+Airflow.</p>
+      <div class="flex flex-wrap gap-3 mb-12">
+        <a href="https://github.com/Ucazin/rfm-customer-segmentation" class="pill">↗ This repo</a>
+        <a href="https://github.com/Ucazin" class="pill">↗ All projects</a>
+        <a href="https://www.linkedin.com/in/luccamariz" class="pill">↗ LinkedIn</a>
+        <a href="mailto:luccamariz01@gmail.com" class="pill">↗ luccamariz01@gmail.com</a>
+      </div>
+      <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+        <div class="text-xs text-zinc-500 font-mono">© 2026 Lucca Cesar · Brasília · Built with HTML + Tailwind + Alpine</div>
+        <div class="text-xs text-zinc-600 font-mono">v2 · 2026-05-22</div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const pb=document.getElementById('pb');
+    document.addEventListener('scroll',()=>{const h=document.documentElement;const pct=(h.scrollTop/(h.scrollHeight-h.clientHeight))*100;pb.style.width=pct+'%';},{passive:true});
+    const io=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.12,rootMargin:'0px 0px -60px 0px'});
+    document.querySelectorAll('[data-fade]').forEach(el=>io.observe(el));
+  </script>
 </body>
 </html>
